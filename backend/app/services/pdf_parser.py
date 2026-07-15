@@ -2,24 +2,32 @@ import fitz
 
 
 class PDFParser:
-
     @staticmethod
     def extract_text(pdf_path: str):
-
         document = fitz.open(pdf_path)
 
-        full_text = []
+        pages = []
+        total_characters = 0
 
-        for page in document:
-            full_text.append(page.get_text())
+        for index, page in enumerate(document, start=1):
+            text = page.get_text("text")
+
+            characters = len(text)
+            total_characters += characters
+
+            pages.append(
+                {
+                    "page": index,
+                    "characters": characters,
+                    "preview": text[:500],
+                    "text": text,
+                }
+            )
 
         document.close()
 
-        text = "\n".join(full_text)
-
         return {
-            "pages": len(full_text),
-            "characters": len(text),
-            "preview": text[:2000],
-            "text": text,
+            "total_pages": len(pages),
+            "total_characters": total_characters,
+            "pages": pages,
         }
