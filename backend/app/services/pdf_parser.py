@@ -1,34 +1,51 @@
 import fitz
 
-from app.services.election_parser import ElectionParser
+from app.schemas.layout import TextBlock
 
 
 class PDFParser:
 
     @staticmethod
-    def extract_text(pdf_path: str):
+    def extract_layout(pdf_path: str):
 
         document = fitz.open(pdf_path)
 
         pages = []
 
-        total_characters = 0
+        for page_number, page in enumerate(document, start=1):
 
-        for index, page in enumerate(document, start=1):
+            page_blocks = []
 
-            raw_text = page.get_text("text")
+            blocks = page.get_text("blocks")
 
-            clean_text = ElectionParser.clean_text(raw_text)
+            blocks = sorted(
+                blocks,
+                key=lambda b: (round(b[1], 1), round(b[0], 1))
+            )
 
-            total_characters += len(clean_text)
+            for block in blocks:
+
+                x0, y0, x1, y1, text, *_ = block
+
+                text = text.strip()
+
+                if not text:
+                    continue
+
+                page_blocks.append(
+                    TextBlock(
+                        x0=x0,
+                        y0=y0,
+                        x1=x1,
+                        y1=y1,
+                        text=text
+                    ).model_dump()
+                )
 
             pages.append(
                 {
-                    "page": index,
-                    "is_voter_page": ElectionParser.is_voter_page(clean_text),
-                    "characters": len(clean_text),
-                    "preview": clean_text[:300],
-                    "text": clean_text,
+                    "page": page_number,
+                    "blocks": page_blocks
                 }
             )
 
@@ -36,6 +53,5 @@ class PDFParser:
 
         return {
             "total_pages": len(pages),
-            "total_characters": total_characters,
-            "pages": pages,
+            "pages": pages
         }
