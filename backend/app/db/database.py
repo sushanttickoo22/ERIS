@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 from app.db.base import Base
 
-# Import all models here
+# Import all models
 from app.models.uploaded_file import UploadedFile
 
 engine = create_engine(
