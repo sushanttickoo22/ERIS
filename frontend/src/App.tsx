@@ -1,45 +1,25 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import MainLayout from "./layouts/MainLayout";
 
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
+import Compare from "./pages/Compare";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 
 export default function App() {
-
     return (
-
         <BrowserRouter>
-
-            <nav
-                style={{
-                    display: "flex",
-                    gap: "20px",
-                    padding: "20px",
-                    borderBottom: "1px solid #ccc"
-                }}
-            >
-
-                <Link to="/">Dashboard</Link>
-
-                <Link to="/upload">Upload</Link>
-
-            </nav>
-
-            <Routes>
-
-                <Route
-                    path="/"
-                    element={<Dashboard />}
-                />
-
-                <Route
-                    path="/upload"
-                    element={<Upload />}
-                />
-
-            </Routes>
-
+            <MainLayout>
+                <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/upload" element={<Upload />} />
+                    <Route path="/compare" element={<Compare />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/settings" element={<Settings />} />
+                </Routes>
+            </MainLayout>
         </BrowserRouter>
-
     );
-
 }
