@@ -3,7 +3,9 @@ import uuid
 
 from fastapi import UploadFile
 
-UPLOAD_DIR = "uploads"
+from app.core.config import settings
+
+UPLOAD_DIR = settings.UPLOAD_FOLDER
 
 os.makedirs(
     UPLOAD_DIR,
@@ -14,31 +16,18 @@ os.makedirs(
 class UploadService:
 
     @staticmethod
-    async def save(
-        file: UploadFile,
-    ):
+    async def save(file: UploadFile):
 
-        extension = os.path.splitext(
-            file.filename
-        )[1]
+        extension = os.path.splitext(file.filename)[1]
 
-        filename = (
-            str(uuid.uuid4())
-            + extension
-        )
+        filename = f"{uuid.uuid4()}{extension}"
 
         filepath = os.path.join(
             UPLOAD_DIR,
             filename
         )
 
-        with open(
-            filepath,
-            "wb"
-        ) as f:
-
-            f.write(
-                await file.read()
-            )
+        with open(filepath, "wb") as f:
+            f.write(await file.read())
 
         return filename
