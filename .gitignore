@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# SQLite
+*.db
+
+# Logs
+logs/
+*.log
+
+# Node
+node_modules/
+
+# Vite
+dist/
+
+# Electron
+out/
+release/
+
+# Environment
+.env
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
