@@ -1,25 +1,35 @@
-from fastapi import APIRouter
-from fastapi import UploadFile
-from fastapi import File
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from sqlalchemy.orm import Session
 
+from app.dependencies import get_db
 from app.services.upload_service import UploadService
 
 router = APIRouter(
     prefix="/upload",
-    tags=["Upload"]
+    tags=["Upload"],
 )
 
 
 @router.post("/")
 async def upload_pdf(
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
+    try:
+        record = await UploadService.save(
+            db=db,
+            file=file,
+        )
 
-    filename = await UploadService.save(
-        file
-    )
+        return {
+            "file_id": record.id,
+            "filename": record.filename,
+            "original_filename": record.original_filename,
+            "status": record.status,
+        }
 
-    return {
-        "filename": filename,
-        "status": "uploaded"
-    }
+    except ValueError as ex:
+        raise HTTPException(
+            status_code=400,
+            detail=str(ex),
+        )
