@@ -1,0 +1,15 @@
+Step: Install Required Software
+
+Please install:
+
+Backend
+Python 3.12+
+VS Code
+Git
+Frontend
+NodeJS LTS (22.x recommended)
+Database
+
+Nothing to install.
+
+SQLite is built in.
