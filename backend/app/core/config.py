@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     UPLOAD_FOLDER: str = "uploads"
     EXPORT_FOLDER: str = "exports"
 
+    MAX_UPLOAD_SIZE_MB: int = 100
+
     class Config:
         env_file = ".env"
 
