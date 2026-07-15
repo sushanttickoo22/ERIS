@@ -1,14 +1,11 @@
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import DateTime
 from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Integer, String
 
 from app.db.base import Base
 
 
 class UploadedFile(Base):
-
     __tablename__ = "uploaded_files"
 
     id = Column(Integer, primary_key=True)
@@ -19,12 +16,10 @@ class UploadedFile(Base):
 
     file_type = Column(String)
 
-    uploaded_at = Column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    file_size = Column(Integer)
 
-    status = Column(
-        String,
-        default="UPLOADED"
-    )
+    sha256 = Column(String, unique=True)
+
+    status = Column(String, default="UPLOADED")
+
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
