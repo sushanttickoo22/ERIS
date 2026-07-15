@@ -1,8 +1,10 @@
 import os
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
+from fastapi import HTTPException
 
 from app.core.config import settings
+
 from app.services.pdf_parser import PDFParser
 
 router = APIRouter(
@@ -14,21 +16,16 @@ router = APIRouter(
 @router.get("/{filename}")
 def parse_pdf(filename: str):
 
-    filepath = os.path.join(
+    pdf_path = os.path.join(
         settings.UPLOAD_FOLDER,
         filename,
     )
 
-    if not os.path.exists(filepath):
+    if not os.path.exists(pdf_path):
+
         raise HTTPException(
             status_code=404,
             detail="PDF not found.",
         )
 
-    result = PDFParser.extract_text(filepath)
-
-    return {
-        "pages": result["pages"],
-        "characters": result["characters"],
-        "preview": result["preview"],
-    }
+    return PDFParser.extract_layout(pdf_path)
